@@ -23,16 +23,16 @@ defmodule Lingo.Game do
 
   def move(game, guess) do
     score = Word.build_score(game.answer, guess)
-
-    %{game | guesses: [score | game.guesses]}
+    guess_list = [score | game.guesses] |> Enum.reverse()
+    %{game | guesses: guess_list}
   end
 
   def show(%__MODULE__{guesses: g}) do
-    [score | _] = g
-
-    score
-    |> Enum.reduce("", fn e, acc -> acc <> show_letter(e) end)
-    |> IO.puts()
+    g
+    |> Enum.each(fn score ->
+      Enum.reduce(score, "", fn e, acc -> acc <> show_letter(e) end)
+      |> IO.puts()
+    end)
   end
 
   defp show_letter({l, :green} = {l, _color}) do
