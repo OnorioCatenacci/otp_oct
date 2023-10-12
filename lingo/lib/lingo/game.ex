@@ -17,12 +17,13 @@ defmodule Lingo.Game do
 
   def move(game, guess) do
     score = Word.build_score(game.answer, guess)
-    guess_list = [score | game.guesses] |> Enum.reverse()
+    guess_list = [score | game.guesses]
     %{game | guesses: guess_list}
   end
 
   def show(%__MODULE__{guesses: g}) do
     g
+    |> Enum.reverse()
     |> Enum.map(fn score ->
       Enum.reduce(score, "", fn e, acc -> acc <> show_letter(e) end)
     end)

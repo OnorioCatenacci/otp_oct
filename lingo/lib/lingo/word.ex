@@ -41,7 +41,7 @@ defmodule Lingo.Word do
       word
       |> Enum.with_index()
       |> Enum.find(fn {{ch, color}, _i} ->
-        color != :green and ch == letter
+        color == :yellow and ch == letter
       end)
       |> elem(1)
 
