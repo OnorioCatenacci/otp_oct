@@ -23,7 +23,7 @@ defmodule Lingo.Game do
 
   def show(%__MODULE__{guesses: g}) do
     g
-    |> Enum.each(fn score ->
+    |> Enum.map(fn score ->
       Enum.reduce(score, "", fn e, acc -> acc <> show_letter(e) end)
     end)
     |> Enum.join("\n")
