@@ -4,45 +4,29 @@ defmodule Lingo.Game do
 
   defstruct [
     :answer,
-    guesses: [],
-    legal_words: []
+    guesses: []
   ]
 
-  defp initialize_word_list() do
-    path = "./priv/words.txt"
-    {:ok, contents} = path |> File.read()
-    contents |> String.split("\n")
-  end
-
-  def random_word() do
-    initialize_word_list() |> Enum.random()
-  end
-
   def new() do
-    answer = random_word()
+    answer = Word.random_word()
 
     %__MODULE__{
-      answer: answer,
-      legal_words: initialize_word_list()
+      answer: answer
     }
   end
 
   def move(game, guess) do
-    if Enum.member?(game.legal_words, guess) do
-      score = Word.build_score(game.answer, guess)
-      guess_list = [score | game.guesses] |> Enum.reverse()
-      {:ok, %{game | guesses: guess_list}}
-    else
-      {:error, game}
-    end
+    score = Word.build_score(game.answer, guess)
+    guess_list = [score | game.guesses] |> Enum.reverse()
+    %{game | guesses: guess_list}
   end
 
   def show(%__MODULE__{guesses: g}) do
     g
     |> Enum.each(fn score ->
       Enum.reduce(score, "", fn e, acc -> acc <> show_letter(e) end)
-      |> IO.puts()
     end)
+    |> Enum.join("\n")
   end
 
   defp show_letter({l, :green} = {l, _color}) do

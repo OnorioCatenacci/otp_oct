@@ -1,4 +1,17 @@
 defmodule Lingo.Word do
+  alias Lingo.Library
+
+  @words Library.initialize_word_list()
+  @set MapSet.new(@words)
+
+  def random_word() do
+    Enum.random(@words)
+  end
+
+  def member?(word) do
+    MapSet.member?(@set, word)
+  end
+
   # Find
   # - green
   # - black
