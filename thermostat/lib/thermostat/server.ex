@@ -3,27 +3,35 @@ defmodule Thermostat.Server do
 
   alias Thermostat.Counter
   # Client
-  def start_link(input) do
-    GenServer.start_link(__MODULE__, input, name: :counter)
+  def start_link(name) do
+    GenServer.start_link(__MODULE__, name, name: name)
   end
 
-  def show do
-    GenServer.call(:counter, :show)
+  def show(name) do
+    GenServer.call(name, :show)
   end
 
-  def inc do
-    GenServer.cast(:counter, :inc)
+  def inc(name) do
+    GenServer.cast(name, :inc)
   end
 
-  def dec do
-    GenServer.cast(:counter, :dec)
+  def dec(name) do
+    GenServer.cast(name, :dec)
+  end
+
+  def boom(name) do
+    GenServer.cast(name, :boom)
   end
 
   # Count Server
+  def child_spec(name) do
+    %{id: name, start: {__MODULE__, :start_link, [name]}}
+  end
+
   @impl true
-  def init(input) do
-    IO.puts("We got to the init with #{input}")
-    state = Counter.new(input)
+  def init(name) do
+    IO.puts("We got to the init with #{name}")
+    state = Counter.new("0")
     {:ok, state}
   end
 
@@ -40,5 +48,10 @@ defmodule Thermostat.Server do
   @impl true
   def handle_cast(:dec, counter) do
     {:noreply, Counter.add(counter, -1)}
+  end
+
+  @impl true
+  def handle_cast(:boom, _) do
+    raise "boom"
   end
 end
