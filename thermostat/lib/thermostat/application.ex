@@ -9,12 +9,12 @@ defmodule Thermostat.Application do
   def start(_type, _args) do
     children = [
       # Starts a worker by calling: Thermostat.Worker.start_link(arg)
-      # {Thermostat.Worker, arg}
+      {Thermostat.Server, "42"}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Thermostat.Supervisor]
+    opts = [strategy: :one_for_one, name: :sup]
     Supervisor.start_link(children, opts)
   end
 end
