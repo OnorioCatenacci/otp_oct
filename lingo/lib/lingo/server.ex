@@ -2,9 +2,10 @@ defmodule Lingo.Server do
   use GenServer
   alias Lingo.Game
 
-  #Server
+  # Server
   @impl true
-  def init(_) do
+  def init(name) do
+    IO.puts("starting game with name #{name}")
     {:ok, Lingo.Game.new()}
   end
 
@@ -23,9 +24,10 @@ defmodule Lingo.Server do
     {:reply, Game.show(game), game}
   end
 
-
-
-  #Client
+  # Client
+  def child_spec(name) do
+    %{id: name, start: {Lingo.Server, :start_link, [name]}}
+  end
 
   def start_link(name) do
     GenServer.start_link(__MODULE__, name, name: name)
@@ -37,13 +39,10 @@ defmodule Lingo.Server do
 
   def move(name, guess) do
     GenServer.cast(name, {:move, guess})
+    show(name)
   end
 
   def boom(name) do
     GenServer.cast(name, :boom)
   end
-
-
-
-
 end
