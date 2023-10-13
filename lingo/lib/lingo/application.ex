@@ -8,15 +8,8 @@ defmodule Lingo.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Lingo.Worker.start_link(arg)
-      # {Lingo.Worker, arg}
-      # {Lingo.Server, :static_shock},
-      # {Lingo.Server, :ironman},
-      # {Lingo.Server, :groot}
+      Lingo.Word,
       {DynamicSupervisor, name: :dynamic_sup, strategy: :one_for_one}
-      #
-      # {:ok, counter1} =
-      # DynamicSupervisor.start_child(MyApp.DynamicSupervisor, {Counter, 0})
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
