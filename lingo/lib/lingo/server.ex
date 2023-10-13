@@ -3,7 +3,7 @@ defmodule Lingo.Server do
   alias Lingo.Game
 
   # Server
-  @impl true
+  # @impl true
   def init(name) do
     IO.puts("starting game with name #{name}")
     {:ok, Lingo.Game.new()}
