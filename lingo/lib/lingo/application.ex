@@ -10,6 +10,10 @@ defmodule Lingo.Application do
     children = [
       # Starts a worker by calling: Lingo.Worker.start_link(arg)
       # {Lingo.Worker, arg}
+      {Lingo.Server, :batman},
+      {Lingo.Server, :static_shock},
+      {Lingo.Server, :ironman},
+      {Lingo.Server, :groot}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
