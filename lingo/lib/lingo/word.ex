@@ -1,21 +1,41 @@
 defmodule Lingo.Word do
+  defstruct [
+    :words,
+    :set
+  ]
+
+  use GenServer
+
   alias Lingo.Library
 
-  @words Library.initialize_word_list()
-  @set MapSet.new(@words)
+  # API
+  def start_link(_) do
+    GenServer.start_link(__MODULE__, :unused, name: :library)
+  end
 
   def random_word() do
-    Enum.random(@words)
+    GenServer.call(:library, :random)
   end
 
   def member?(word) do
-    MapSet.member?(@set, word)
+    GenServer.call(:library, {:member, word})
   end
 
-  # Find
-  # - green
-  # - black
-  # - yellow
+  # Server
+  def init(_) do
+    words = Library.initialize_word_list()
+    {:ok, %__MODULE__{words: Enum.shuffle(words), set: MapSet.new(words)}}
+  end
+
+  def handle_call(:random, _from, %{words: [head | tail]} = words) do
+    new_state = %{words | words: tail}
+    {:reply, head, new_state}
+  end
+
+  def handle_call({:member, word}, _from, %{set: set} = words) do
+    {:reply, MapSet.member?(set, word), words}
+  end
+
   def build_score(answer, guess) do
     answer = String.graphemes(answer)
     guess = String.graphemes(guess)
